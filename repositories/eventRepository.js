@@ -76,7 +76,12 @@ class EventRepository {
       if (!event) return null;
       
       // Check if user is already a participant
-      if (!event.participants.includes(userId)) {
+      const userIdStr = userId.toString();
+      const isParticipant = event.participants.some(
+        p => p.toString() === userIdStr
+      );
+      
+      if (!isParticipant) {
         event.participants.push(userId);
         await event.save();
       }

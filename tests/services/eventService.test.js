@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const eventService = require('../../services/eventService');
 const userRepository = require('../../repositories/userRepository');
 const eventRepository = require('../../repositories/eventRepository');
@@ -9,8 +10,10 @@ describe('EventService', () => {
   let attendeeId;
 
   beforeEach(async () => {
+    // Create users with unique emails to avoid conflicts
+    const timestamp = Date.now();
     const organizer = await userRepository.create({
-      email: 'organizer@example.com',
+      email: `organizer${timestamp}@example.com`,
       password: 'hashedpassword',
       name: 'Organizer',
       role: 'organizer'
@@ -18,7 +21,7 @@ describe('EventService', () => {
     organizerId = organizer._id.toString();
 
     const attendee = await userRepository.create({
-      email: 'attendee@example.com',
+      email: `attendee${timestamp}@example.com`,
       password: 'hashedpassword',
       name: 'Attendee'
     });
@@ -134,7 +137,7 @@ describe('EventService', () => {
     });
 
     it('should throw error if event not found', async () => {
-      const fakeId = new require('mongoose').Types.ObjectId().toString();
+      const fakeId = new mongoose.Types.ObjectId().toString();
 
       await expect(
         eventService.updateEvent(fakeId, { title: 'Updated' }, organizerId)
@@ -232,7 +235,7 @@ describe('EventService', () => {
     });
 
     it('should throw error if event not found', async () => {
-      const fakeId = new require('mongoose').Types.ObjectId().toString();
+      const fakeId = new mongoose.Types.ObjectId().toString();
 
       await expect(
         eventService.registerForEvent(fakeId, attendeeId)

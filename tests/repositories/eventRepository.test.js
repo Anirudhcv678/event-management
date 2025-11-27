@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const eventRepository = require('../../repositories/eventRepository');
 const userRepository = require('../../repositories/userRepository');
 const Event = require('../../models/Event');
@@ -7,8 +8,10 @@ describe('EventRepository', () => {
   let organizerId;
 
   beforeEach(async () => {
+    // Create organizer with unique email to avoid conflicts
+    const timestamp = Date.now();
     const organizer = await userRepository.create({
-      email: 'organizer@example.com',
+      email: `organizer${timestamp}@example.com`,
       password: 'hashedpassword',
       name: 'Organizer',
       role: 'organizer'
@@ -70,7 +73,7 @@ describe('EventRepository', () => {
     });
 
     it('should return null if event not found', async () => {
-      const fakeId = new require('mongoose').Types.ObjectId();
+      const fakeId = new mongoose.Types.ObjectId();
       const foundEvent = await eventRepository.findById(fakeId);
 
       expect(foundEvent).toBeNull();
@@ -127,8 +130,9 @@ describe('EventRepository', () => {
 
   describe('getByOrganizer', () => {
     it('should get events by organizer ID', async () => {
+      const timestamp = Date.now();
       const anotherOrganizer = await userRepository.create({
-        email: 'another@example.com',
+        email: `another${timestamp}@example.com`,
         password: 'hashedpassword',
         name: 'Another Organizer',
         role: 'organizer'
@@ -194,7 +198,7 @@ describe('EventRepository', () => {
     });
 
     it('should return false if event not found', async () => {
-      const fakeId = new require('mongoose').Types.ObjectId();
+      const fakeId = new mongoose.Types.ObjectId();
       const deleted = await eventRepository.delete(fakeId);
 
       expect(deleted).toBe(false);
@@ -203,8 +207,9 @@ describe('EventRepository', () => {
 
   describe('addParticipant', () => {
     it('should add participant to event', async () => {
+      const timestamp = Date.now();
       const participant = await userRepository.create({
-        email: 'participant@example.com',
+        email: `participant${timestamp}@example.com`,
         password: 'hashedpassword',
         name: 'Participant'
       });
@@ -223,8 +228,9 @@ describe('EventRepository', () => {
     });
 
     it('should not add duplicate participants', async () => {
+      const timestamp = Date.now();
       const participant = await userRepository.create({
-        email: 'participant@example.com',
+        email: `participant${timestamp}@example.com`,
         password: 'hashedpassword',
         name: 'Participant'
       });
@@ -243,8 +249,8 @@ describe('EventRepository', () => {
     });
 
     it('should return null if event not found', async () => {
-      const fakeId = new require('mongoose').Types.ObjectId();
-      const participantId = new require('mongoose').Types.ObjectId();
+      const fakeId = new mongoose.Types.ObjectId();
+      const participantId = new mongoose.Types.ObjectId();
 
       const result = await eventRepository.addParticipant(fakeId, participantId);
 
@@ -254,8 +260,9 @@ describe('EventRepository', () => {
 
   describe('removeParticipant', () => {
     it('should remove participant from event', async () => {
+      const timestamp = Date.now();
       const participant = await userRepository.create({
-        email: 'participant@example.com',
+        email: `participant${timestamp}@example.com`,
         password: 'hashedpassword',
         name: 'Participant'
       });

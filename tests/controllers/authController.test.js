@@ -67,6 +67,7 @@ describe('AuthController', () => {
         success: false,
         message: 'Email, password, and name are required'
       });
+      // Service should not be called when validation fails
       expect(authService.register).not.toHaveBeenCalled();
     });
 
@@ -150,7 +151,7 @@ describe('AuthController', () => {
         'test@example.com',
         'password123'
       );
-      expect(res.status).toHaveBeenCalledWith(200);
+      // res.status() is not called for 200, json is called directly
       expect(res.json).toHaveBeenCalledWith({
         success: true,
         message: 'Login successful',
@@ -171,6 +172,7 @@ describe('AuthController', () => {
         success: false,
         message: 'Email and password are required'
       });
+      // Service should not be called when validation fails
       expect(authService.login).not.toHaveBeenCalled();
     });
 

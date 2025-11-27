@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const userRepository = require('../../repositories/userRepository');
 const User = require('../../models/User');
 require('../setup');
@@ -99,7 +100,7 @@ describe('UserRepository', () => {
     });
 
     it('should return null if user not found by ID', async () => {
-      const fakeId = new require('mongoose').Types.ObjectId();
+      const fakeId = new mongoose.Types.ObjectId();
       const foundUser = await userRepository.findById(fakeId);
 
       expect(foundUser).toBeNull();

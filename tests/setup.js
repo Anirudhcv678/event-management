@@ -9,20 +9,34 @@ process.env.NODE_ENV = 'test';
 
 // Connect to test database
 beforeAll(async () => {
-  await mongoose.connect(TEST_MONGODB_URI);
+  if (mongoose.connection.readyState === 0) {
+    await mongoose.connect(TEST_MONGODB_URI);
+  }
 });
 
 // Clean up after each test
 afterEach(async () => {
-  const collections = mongoose.connection.collections;
-  for (const key in collections) {
-    await collections[key].deleteMany({});
+  if (mongoose.connection.readyState === 1) {
+    const collections = mongoose.connection.collections;
+    for (const key in collections) {
+      try {
+        await collections[key].deleteMany({});
+      } catch (error) {
+        // Ignore errors during cleanup
+      }
+    }
   }
 });
 
 // Close database connection after all tests
 afterAll(async () => {
-  await mongoose.connection.dropDatabase();
-  await mongoose.connection.close();
+  if (mongoose.connection.readyState === 1) {
+    try {
+      await mongoose.connection.dropDatabase();
+    } catch (error) {
+      // Ignore drop errors
+    }
+    await mongoose.connection.close();
+  }
 });
 

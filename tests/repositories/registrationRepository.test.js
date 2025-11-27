@@ -9,8 +9,10 @@ describe('RegistrationRepository', () => {
   let userId;
 
   beforeEach(async () => {
+    // Create organizer with unique email to avoid conflicts
+    const timestamp = Date.now();
     const organizer = await userRepository.create({
-      email: 'organizer@example.com',
+      email: `organizer${timestamp}@example.com`,
       password: 'hashedpassword',
       name: 'Organizer',
       role: 'organizer'
@@ -26,7 +28,7 @@ describe('RegistrationRepository', () => {
     eventId = event._id;
 
     const user = await userRepository.create({
-      email: 'user@example.com',
+      email: `user${timestamp}@example.com`,
       password: 'hashedpassword',
       name: 'User'
     });

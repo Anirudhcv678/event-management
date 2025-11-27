@@ -37,8 +37,13 @@ describe('Event Management Integration Tests', () => {
         name: 'Organizer',
         role: 'organizer'
       });
-    organizerToken = organizerRes.body.data.token;
-    organizerId = organizerRes.body.data.user.id;
+    
+    if (organizerRes.status === 201 && organizerRes.body.success) {
+      organizerToken = organizerRes.body.data.token;
+      organizerId = organizerRes.body.data.user.id || organizerRes.body.data.user._id;
+    } else {
+      throw new Error('Failed to register organizer: ' + JSON.stringify(organizerRes.body));
+    }
 
     // Register attendee
     const attendeeRes = await request(app)
@@ -48,8 +53,13 @@ describe('Event Management Integration Tests', () => {
         password: 'password123',
         name: 'Attendee'
       });
-    attendeeToken = attendeeRes.body.data.token;
-    attendeeId = attendeeRes.body.data.user.id;
+    
+    if (attendeeRes.status === 201 && attendeeRes.body.success) {
+      attendeeToken = attendeeRes.body.data.token;
+      attendeeId = attendeeRes.body.data.user.id || attendeeRes.body.data.user._id;
+    } else {
+      throw new Error('Failed to register attendee: ' + JSON.stringify(attendeeRes.body));
+    }
   });
 
   describe('Event CRUD Flow', () => {
