@@ -413,6 +413,33 @@ The project follows a **layered architecture** pattern for clean separation of c
 - **Scalability**: Easy to add new features or change implementations
 - **Reusability**: Services and repositories can be reused across controllers
 
+## Testing
+
+The project includes comprehensive test coverage for all layers of the application.
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run with coverage report
+npm test -- --coverage
+```
+
+### Test Structure
+
+- **Repository Tests**: Test database operations and data access layer
+- **Service Tests**: Test business logic and validation
+- **Controller Tests**: Test request/response handling
+- **Middleware Tests**: Test authentication and authorization
+- **Integration Tests**: Test complete user flows end-to-end
+
+See `tests/README.md` for detailed testing documentation.
+
 ## Development
 
 ### Extending Functionality
